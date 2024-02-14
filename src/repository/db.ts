@@ -4,7 +4,6 @@ import { Product } from "./models/product";
 import { User } from "./models/user";
 
 export default class Db {
-    constructor() {}
     
     // Función para obtener todos los productos
     async getProducts() {
@@ -19,6 +18,7 @@ export default class Db {
         }
     }
 
+    
     // Función para obtener el carrito de compras
     async getCart() {
         try {
@@ -32,32 +32,6 @@ export default class Db {
         }
     }
 
-    // Función para vaciar el carrito de compras
-    async clearCart() {
-        try {
-            // Inicializa la fuente de datos
-            const dataSource = await initializeAppDataSource();
-            // Obtiene el repositorio del carrito
-            const cartRepo = dataSource.getRepository(Cart);
-            // Borra todos los registros de la tabla del carrito
-            await cartRepo.clear();
-            return true; // Retorna true si el vaciado del carrito fue exitoso
-        } catch (error) {
-            console.error("Error clearing cart:", error); // Maneja cualquier error y registra un mensaje de error
-            return false; // Retorna false en caso de error
-        }
-    }
-
-    async deleteUser(locationUser: string, id: string) {
-        try {
-            //Buscar funcion de orm que encuentre y/o borre el usuario. 
-            //(ejemplo)
-            return
-        }
-        catch (err) {
-            return
-        }
-    };
 
     // Función para añadir un artículo al carrito
     async addToCart(userId: number, productId: number, quantity: number) {
@@ -94,19 +68,19 @@ export default class Db {
         }
     }
 
-    // Función para obtener usuarios
-    async getUser() {
-        try {
-            // Inicializa la fuente de datos y obtiene el repositorio de usuarios 
-            console.log("Entro a db")
-            const readData = await (await initializeAppDataSource()).getRepository(User).find();
-            return readData; // Retorna los usuarios obtenidos
-        }
-        catch (error) {
-            console.error("Error getting user:", error); // Maneja cualquier error y registra un mensaje de error
-            return false; // Retorna false en caso de error
-        }
-    }
+    // // Función para obtener usuarios
+    // async getUser() {
+    //     try {
+    //         // Inicializa la fuente de datos y obtiene el repositorio de usuarios 
+    //         console.log("Entro a db")
+    //         const readData = await (await initializeAppDataSource()).getRepository(User).find();
+    //         return readData; // Retorna los usuarios obtenidos
+    //     }
+    //     catch (error) {
+    //         console.error("Error getting user:", error); // Maneja cualquier error y registra un mensaje de error
+    //         return false; // Retorna false en caso de error
+    //     }
+    // }
 
     async registerUser(username: string, email: string, password: string) {
         try {

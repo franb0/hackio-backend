@@ -13,6 +13,18 @@ export async function getProducts(_req: Request, res: Response) {
     }
 };
 
+// Función para obtener producto por id
+export async function getProductsId(req: Request, res: Response) {
+    try {
+        const db = new Db(); // Crea una nueva instancia de la clase Db
+        const getData = await db.getProducts(); // Llama al método getProducts de la instancia db para obtener los productos
+        return res.status(200).json(getData); // Devuelve una respuesta HTTP con los productos en formato JSON
+    } catch (error) { // Captura cualquier error que ocurra durante la obtención de los productos
+        console.error("Error getting products:", error); // Registra un mensaje de error en la consola
+        return res.status(500).json({ error: "Internal server error" }); // Devuelve una respuesta HTTP con un estado de error 500 y un mensaje de error genérico
+    }
+};
+
 // Función para obtener el carrito de compras
 export async function getCart(_req: Request, res: Response) {
     try {
@@ -25,32 +37,20 @@ export async function getCart(_req: Request, res: Response) {
     }
 };
 
-// Función para obtener usuarios
-export async function getUser(_req: Request, res: Response) {
-    try {
-        const db = new Db(); // Crea una nueva instancia de la clase Db
-        console.log("Entro a controller")
-        const getData = await db.getUser(); // Llama al método getUser de la instancia db para obtener los usuarios
-        return res.status(200).json(getData); // Devuelve una respuesta HTTP con los usuarios en formato JSON
-    } catch (error) { // Captura cualquier error que ocurra durante la obtención de los usuarios
-        console.error("Error getting user:", error); // Registra un mensaje de error en la consola
-        return res.status(500).json({ error: "Internal server error" }); // Devuelve una respuesta HTTP con un estado de error 500 y un mensaje de error genérico
-    }
-};
+// // Función para obtener usuarios
 
-// Función para vaciar el carrito de compras de un usuario
-export async function clearCart(_req: Request, res: Response) {
-    try {
-        const db = new Db(); // Crea una nueva instancia de la clase Db
-        // Aquí asumimos que hay una función `clearCart` en la clase `Db`
-        // Esta función debería encargarse de eliminar todos los elementos del carrito de un usuario
-        const result = await db.clearCart();
-        return res.status(200).json({ message: "Cart cleared successfully" }); // Devuelve una respuesta HTTP con un estado de 200 y un mensaje de éxito
-    } catch (error) { // Captura cualquier error que ocurra durante el vaciado del carrito
-        console.error("Error clearing cart:", error); // Registra un mensaje de error en la consola
-        return res.status(500).json({ error: "Internal server error" }); // Devuelve una respuesta HTTP con un estado de error 500 y un mensaje de error genérico
-    }
-}
+// export async function getUser(_req: Request, res: Response) {
+//     try {
+//         const db = new Db(); // Crea una nueva instancia de la clase Db
+//         console.log("Entro a controller")
+//         const getData = await db.getUser(); // Llama al método getUser de la instancia db para obtener los usuarios
+//         return res.status(200).json(getData); // Devuelve una respuesta HTTP con los usuarios en formato JSON
+//     } catch (error) { // Captura cualquier error que ocurra durante la obtención de los usuarios
+//         console.error("Error getting user:", error); // Registra un mensaje de error en la consola
+//         return res.status(500).json({ error: "Internal server error" }); // Devuelve una respuesta HTTP con un estado de error 500 y un mensaje de error genérico
+//     }
+// };
+
 
 // Función para añadir un artículo al carrito de compras
 export async function addToCart(req: Request, res: Response) {
@@ -111,15 +111,3 @@ export async function loginUser(req: Request, res: Response) {
     }
 }
 
-export async function deleteUser(req: Request, res: Response) {
-    try {
-        const locationUser = req.params.argUsers; //Parametros por argumento
-        const userId = req.params.id;
-        const instance = new Db();
-        const deleteOne = await instance.deleteUser(locationUser, userId);
-        return res.status(201).json(deleteOne);
-    }
-    catch (err) {
-        return res.status(404).json(err)
-    }
-}
