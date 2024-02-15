@@ -13,18 +13,6 @@ export async function getProducts(_req: Request, res: Response) {
     }
 };
 
-// Función para obtener producto por id
-export async function getProductsId(req: Request, res: Response) {
-    try {
-        const db = new Db(); // Crea una nueva instancia de la clase Db
-        const getData = await db.getProducts(); // Llama al método getProducts de la instancia db para obtener los productos
-        return res.status(200).json(getData); // Devuelve una respuesta HTTP con los productos en formato JSON
-    } catch (error) { // Captura cualquier error que ocurra durante la obtención de los productos
-        console.error("Error getting products:", error); // Registra un mensaje de error en la consola
-        return res.status(500).json({ error: "Internal server error" }); // Devuelve una respuesta HTTP con un estado de error 500 y un mensaje de error genérico
-    }
-};
-
 // Función para obtener el carrito de compras
 export async function getCart(_req: Request, res: Response) {
     try {
@@ -79,8 +67,12 @@ export async function addToCart(req: Request, res: Response) {
     }
 }
 
-// Función para registrar un nuevo usuario utilizando el método PUT
+// Función para registrar un nuevo usuario utilizando el método POST
 export async function registerUser(req: Request, res: Response) {
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method Not Allowed' });
+    }
+
     // Extraer los datos del formulario de la solicitud
     const { username, email, password } = req.body;
 

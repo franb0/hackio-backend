@@ -13,10 +13,10 @@ const AppDataSource = new DataSource({
     synchronize: true,
     logging: true,
     entities: [Product, User, Cart],
-    subscribers: [],
-    migrations: []
+    subscribers: []
 });
 
 export async function initializeAppDataSource() {
     return await AppDataSource.initialize();
 }
+

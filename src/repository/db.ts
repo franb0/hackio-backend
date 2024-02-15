@@ -68,19 +68,6 @@ export default class Db {
         }
     }
 
-    // // Función para obtener usuarios
-    // async getUser() {
-    //     try {
-    //         // Inicializa la fuente de datos y obtiene el repositorio de usuarios 
-    //         console.log("Entro a db")
-    //         const readData = await (await initializeAppDataSource()).getRepository(User).find();
-    //         return readData; // Retorna los usuarios obtenidos
-    //     }
-    //     catch (error) {
-    //         console.error("Error getting user:", error); // Maneja cualquier error y registra un mensaje de error
-    //         return false; // Retorna false en caso de error
-    //     }
-    // }
 
     async registerUser(username: string, email: string, password: string) {
         try {
