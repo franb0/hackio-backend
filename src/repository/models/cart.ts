@@ -7,12 +7,18 @@ export class Cart {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @ManyToOne(() => User)
-    user!: User;
-
-    @ManyToOne(() => Product)
-    product!: Product;
+    @Column()
+    user: number;
 
     @Column()
-    quantity!: number;
+    product: number;
+
+    @Column()
+    quantity: number;
+
+    constructor(user: number, product: number, quantity: number) {
+        this.user = user;
+        this.product = product;
+        this.quantity = quantity;
+    }
 }

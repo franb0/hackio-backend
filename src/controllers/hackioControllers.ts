@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Db from "../repository/db";
+import { closeAppDataSource } from "../repository/config";
 
 // Función para obtener todos los productos
 export async function getProducts(_req: Request, res: Response) {
@@ -53,7 +54,7 @@ export async function addToCart(req: Request, res: Response) {
 
         // Llamar al método addToCart de la instancia db para agregar el artículo al carrito
         const addedToCart = await db.addToCart(userId, productId, quantity);
-
+        closeAppDataSource();
         // Verificar si el artículo se agregó correctamente al carrito
         if (addedToCart) {
             return res.status(200).json({ message: "Item added to cart successfully" });
@@ -75,10 +76,11 @@ export async function registerUser(req: Request, res: Response) {
 
     // Extraer los datos del formulario de la solicitud
     const { username, email, password } = req.body;
-
+    
     try {
         const db = new Db(); // Crear una instancia de la clase Db
         const result = await db.registerUser(username, email, password); // Llamar al método registerUser de la instancia db para registrar al usuario
+        closeAppDataSource();
         return res.status(201).json(result); // Devolver el resultado de la operación de registro en formato JSON
     } catch (error) {
         // Manejar cualquier error y enviar una respuesta de error al cliente
@@ -95,6 +97,7 @@ export async function loginUser(req: Request, res: Response) {
     try {
         const db = new Db(); // Crear una instancia de la clase Db
         const result = await db.loginUser(username, password); // Llamar al método loginUser de la instancia db para iniciar sesión del usuario
+        closeAppDataSource();
         return res.status(200).json(result); // Devolver el resultado de la operación de inicio de sesión en formato JSON
     } catch (error) {
         // Manejar cualquier error y enviar una respuesta de error al cliente

@@ -9,13 +9,14 @@ export default class Db {
     async getProducts() {
         try {
             // Inicializa la fuente de datos y obtiene el repositorio de productos
-            const readData = await (await initializeAppDataSource()).getRepository(Product).find();
-            closeAppDataSource()
+            const dataSource = await initializeAppDataSource();
+            const readData = await dataSource.manager.getRepository(Product).find();
+            closeAppDataSource();
             return readData; // Retorna los productos obtenidos
         }
         catch (error) {
             console.error("Error getting products:", error); // Maneja cualquier error y registra un mensaje de error
-            return false; // Retorna false en caso de error
+            // return false;
         }
     }
 
@@ -24,13 +25,14 @@ export default class Db {
     async getCart() {
         try {
             // Inicializa la fuente de datos y obtiene el repositorio del carrito
-            const readData = await (await initializeAppDataSource()).getRepository(Cart).find();
+            const dataSource = await initializeAppDataSource();
+            const readData = await dataSource.manager.getRepository(Cart).find();
             closeAppDataSource()
             return readData; // Retorna el carrito obtenido
         }
         catch (error) {
             console.error("Error getting cart:", error); // Maneja cualquier error y registra un mensaje de error
-            return false; // Retorna false en caso de error
+            // return false;
         }
     }
 
@@ -38,36 +40,32 @@ export default class Db {
     // Función para añadir un artículo al carrito
     async addToCart(userId: number, productId: number, quantity: number) {
         try {
-            // Inicializa la fuente de datos
-            const dataSource = await initializeAppDataSource();
-            // Obtiene los repositorios para las entidades Cart, User y Product
+            const dataSource = await initializeAppDataSource(); // Inicializa la fuente de datos de la aplicación
+
             const cartRepo = dataSource.getRepository(Cart);
             const userRepo = dataSource.getRepository(User);
             const productRepo = dataSource.getRepository(Product);
-            // Busca el usuario y el producto correspondientes en la base de datos
+
             const user = await userRepo.findOne({ where: { id: userId } });
             const product = await productRepo.findOne({ where: { id: productId } });
             // Verifica si el usuario y el producto existen
             if (!user || !product) {
                 throw new Error("User or product not found.");
             }
-            // Busca si ya existe un elemento de carrito para este usuario y producto
-            let cartItem = await cartRepo.findOne({ where: { user, product } });
-            // Si no existe, crea un nuevo elemento de carrito
-            if (!cartItem) {
-                cartItem = new Cart();
-                cartItem.user = user;
-                cartItem.product = product;
-            }
-            // Aumenta la cantidad del producto en el carrito
+
+            const cartItem = new Cart(userId, productId, quantity);
+            cartItem.user = userId;
+            cartItem.product = productId;
             cartItem.quantity += quantity;
-            // Guarda el elemento del carrito en la base de datos
+    
+            // Guarda el usuario en la base de datos
             await cartRepo.save(cartItem);
-            closeAppDataSource()
-            return cartItem; // Devuelve el elemento del carrito
+            closeAppDataSource();
+            
+            return { success: true, message: "Cart registered successfully" };
         } catch (error) {
-            console.error("Error adding to cart:", error); // Maneja cualquier error y registra un mensaje de error
-            return null; // Devuelve null en caso de error
+            console.error("Error registering user:", error);
+            return { success: false, error: "Internal server error" };
         }
     }
 

@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import hackioRouter from "./router/router";
+import "./repository/config"
 
 const app = express();
 const PORT = 8080;
