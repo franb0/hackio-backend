@@ -8,7 +8,7 @@ hackioRouter.get('/products', getProducts);
 hackioRouter.get('/cart', getCart);
 hackioRouter.post('/addToCart', addToCart);
 hackioRouter.post('/register', registerUser);
-hackioRouter.get('/user/login', loginUser);
+hackioRouter.get('/login', loginUser);
 
 // Rutas en desuso
 //hackioRouter.get('/products/:id', getProductsId);

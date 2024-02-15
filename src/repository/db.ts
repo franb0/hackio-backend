@@ -1,4 +1,4 @@
-import { initializeAppDataSource } from "./config";
+import { initializeAppDataSource, closeAppDataSource } from "./config";
 import { Cart } from "./models/cart";
 import { Product } from "./models/product";
 import { User } from "./models/user";
@@ -10,6 +10,7 @@ export default class Db {
         try {
             // Inicializa la fuente de datos y obtiene el repositorio de productos
             const readData = await (await initializeAppDataSource()).getRepository(Product).find();
+            closeAppDataSource()
             return readData; // Retorna los productos obtenidos
         }
         catch (error) {
@@ -24,6 +25,7 @@ export default class Db {
         try {
             // Inicializa la fuente de datos y obtiene el repositorio del carrito
             const readData = await (await initializeAppDataSource()).getRepository(Cart).find();
+            closeAppDataSource()
             return readData; // Retorna el carrito obtenido
         }
         catch (error) {
@@ -61,6 +63,7 @@ export default class Db {
             cartItem.quantity += quantity;
             // Guarda el elemento del carrito en la base de datos
             await cartRepo.save(cartItem);
+            closeAppDataSource()
             return cartItem; // Devuelve el elemento del carrito
         } catch (error) {
             console.error("Error adding to cart:", error); // Maneja cualquier error y registra un mensaje de error
@@ -88,7 +91,8 @@ export default class Db {
     
             // Guarda el usuario en la base de datos
             await userRepo.save(newUser);
-    
+            closeAppDataSource()
+            
             return { success: true, message: "User registered successfully" };
         } catch (error) {
             console.error("Error registering user:", error);
@@ -103,11 +107,13 @@ export default class Db {
     
             // Busca el usuario en la base de datos por nombre de usuario y contraseña
             const user = await userRepo.findOne({ where: { username, password } });
+            closeAppDataSource()
             if (user) {
                 return { success: true, message: "Login successful" };
             } else {
                 return { success: false, error: "Incorrect username or password" };
             }
+            
         } catch (error) {
             console.error("Error logging in:", error);
             return { success: false, error: "Internal server error" };

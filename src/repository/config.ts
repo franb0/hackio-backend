@@ -10,7 +10,7 @@ const AppDataSource = new DataSource({
     username: 'root',
     password: 'password',
     database: 'hackioDB',
-    synchronize: true,
+    synchronize: false,
     logging: true,
     entities: [Product, User, Cart],
     subscribers: []
@@ -20,3 +20,6 @@ export async function initializeAppDataSource() {
     return await AppDataSource.initialize();
 }
 
+export async function closeAppDataSource() {
+    return await AppDataSource.close();
+}
