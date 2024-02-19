@@ -21,20 +21,46 @@ export default class Db {
     }
 
     
-    // Función para obtener el carrito de compras
     async getCart() {
         try {
             // Inicializa la fuente de datos y obtiene el repositorio del carrito
             const dataSource = await initializeAppDataSource();
-            const readData = await dataSource.manager.getRepository(Cart).find();
-            closeAppDataSource()
-            return readData; // Retorna el carrito obtenido
-        }
-        catch (error) {
+            const cartRepo = dataSource.manager.getRepository(Cart);
+            
+            // Obtiene todos los elementos del carrito
+            const cartItems = await cartRepo.find();
+    
+            // Array para almacenar los productos correspondientes a cada elemento del carrito
+            const cartItemsWithData = [];
+    
+            // Itera sobre cada elemento del carrito
+            for (const cartItem of cartItems) {
+                // Busca el producto correspondiente al cartItem.product ID
+                const product = await dataSource.manager.query(
+                    `SELECT * FROM product WHERE id = ${cartItem.product}`
+                );
+    
+                // Verifica si se encontró el producto
+                if (product && product.length > 0) {
+                    // Asigna el producto al cartItem
+                    cartItem.product = product[0];
+                    // Agrega el cartItem actualizado al array
+                    cartItemsWithData.push(cartItem);
+                } else {
+                    console.error(`Product not found for cart item with ID ${cartItem.id}`);
+                }
+            }
+    
+            closeAppDataSource();
+            
+            return cartItemsWithData; // Retorna el carrito con los productos correspondientes
+        } catch (error) {
             console.error("Error getting cart:", error); // Maneja cualquier error y registra un mensaje de error
             // return false;
         }
     }
+    
+    
 
 
     // Función para añadir un artículo al carrito

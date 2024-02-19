@@ -11,6 +11,6 @@ export class Product {
     @Column()
     price!: number
 
-    @Column()
+    @Column({length:999})
     image!: string
 }

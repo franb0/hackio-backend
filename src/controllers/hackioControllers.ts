@@ -54,7 +54,7 @@ export async function addToCart(req: Request, res: Response) {
 
         // Llamar al método addToCart de la instancia db para agregar el artículo al carrito
         const addedToCart = await db.addToCart(userId, productId, quantity);
-        closeAppDataSource();
+        // closeAppDataSource();
         // Verificar si el artículo se agregó correctamente al carrito
         if (addedToCart) {
             return res.status(200).json({ message: "Item added to cart successfully" });
